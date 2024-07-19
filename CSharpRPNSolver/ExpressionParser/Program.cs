@@ -33,4 +33,16 @@ void CalculateAndPrintSteps(string expression)
     Console.WriteLine($"Result:     {result}");
 }
 
-CalculateAndPrintSteps("2 - --1^2 - 3^3");
+if (args.Length == 0)
+{
+    Console.WriteLine("Solve on example expression:");
+    CalculateAndPrintSteps("2 - --1^2 - 3^3");
+}
+else if (args.Length == 1)
+{
+    CalculateAndPrintSteps(args[0]);
+}
+else
+{
+    Console.WriteLine("Too many args: Provide an expression as the first argument or no expression to use an example expression.");
+}
