@@ -1,6 +1,6 @@
 import sys
 
-from solver.parse.tokenizer import tokenize
+from solver.parse.tokenizer_fsm import tokenize
 from solver.parse.parser import rpn_from_tokens, solve_rpn
 
 def calculate_and_print_steps(expression: str):
@@ -18,7 +18,7 @@ def main():
     if len(sys.argv) > 2:
         print("Too many args. Provide an expression as the first argument or no arguments to use an example expression")
         return
-    expression = '2 - (1/2)^-2 - 3^3'
+    expression = '22.5 x (1/2)^-2 - 3^3'
     if len(sys.argv) == 2:
         expression = sys.argv[1]
     else:

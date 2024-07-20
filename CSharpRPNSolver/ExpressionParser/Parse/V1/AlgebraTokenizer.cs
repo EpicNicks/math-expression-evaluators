@@ -1,6 +1,6 @@
 ﻿using ExpressionParser.Tokens;
 
-namespace ExpressionParser.Parse;
+namespace ExpressionParser.Parse.V1;
 
 internal static class AlgebraTokenizer
 {

@@ -1,4 +1,5 @@
 ﻿using ExpressionParser.Tokens;
+using System.Text.RegularExpressions.Generated;
 
 namespace ExpressionParser.Parse;
 
@@ -12,6 +13,13 @@ internal static class ShuntingYardParser
 
     public static List<Token> BuildRPNFrom(List<Token> tokens)
     {
+        IEnumerable<InvalidToken> invalidTokens = tokens.OfType<InvalidToken>();
+        if (invalidTokens.Any())
+        {
+            IEnumerable<ArgumentException> invalidTokenExceptions = invalidTokens.Select(t => new ArgumentException($"Invalid token: {t.InvalidShard} at position {t.Index}"));
+            throw new AggregateException("Parsing errors encountered:", invalidTokenExceptions);
+        }
+
         var operatorStack = new Stack<OperatorToken>();
         var rpnSolveList = new List<Token>();
 
@@ -48,11 +56,11 @@ internal static class ShuntingYardParser
                     // check precedence
                     bool PrecedenceCompare(OperatorToken otherToken)
                     {
-                        if (otherToken.associativity == OperatorToken.Associativity.LEFT)
+                        if (otherToken.Associativity == Associativity.LEFT)
                         {
                             return opToken.Precedence <= otherToken.Precedence;
                         }
-                        else if (otherToken.associativity == OperatorToken.Associativity.RIGHT)
+                        else if (otherToken.Associativity == Associativity.RIGHT)
                         {
                             return opToken.Precedence < otherToken.Precedence;
                         }
@@ -81,6 +89,12 @@ internal static class ShuntingYardParser
 
     public static (decimal result, List<string> steps) SolveRPNOf(List<Token> rpnSolveList)
     {
+        IEnumerable<InvalidToken> invalidTokens = rpnSolveList.OfType<InvalidToken>();
+        if (invalidTokens.Any())
+        {
+            IEnumerable<ArgumentException> invalidTokenExceptions = invalidTokens.Select(t => new ArgumentException($"Invalid token: {t.InvalidShard} at position {t.Index}"));
+            throw new AggregateException("Parsing errors encountered:", invalidTokenExceptions);
+        }
         // resolve the solve list
         List<string> steps = ["Showing steps for RPN solve:"];
 
@@ -160,10 +174,10 @@ internal static class ShuntingYardParser
             }
         }
 
-        if (rpnSolveList[0] is LiteralToken litResult)
+        if (rpnSolveList.Count == 1 && rpnSolveList[0] is LiteralToken litResult)
         {
             return (litResult.Value, steps);
         }
-        throw new InvalidOperationException($"rpnSolveList");
+        throw new InvalidOperationException($"{rpnSolveList}");
     }
 }

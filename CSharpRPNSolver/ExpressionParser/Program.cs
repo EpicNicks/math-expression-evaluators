@@ -1,4 +1,6 @@
 ﻿using ExpressionParser.Parse;
+using ExpressionParser.Parse.V1;
+using ExpressionParser.Parse.V2;
 using ExpressionParser.Tokens;
 
 decimal Calculate(string expression)
@@ -22,7 +24,7 @@ void TestExpressions()
 
 void CalculateAndPrintSteps(string expression)
 {
-    var tokens = AlgebraTokenizer.Tokenize(expression);
+    var tokens = Tokenizer.Tokenize(expression);
     var rpnList = ShuntingYardParser.BuildRPNFrom(tokens);
     var (result, steps) = ShuntingYardParser.SolveRPNOf(new List<Token>(rpnList));
 
