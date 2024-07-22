@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Token">
+      <UniqueIdentifier>{4a2da7cf-ff89-4b0b-bf9f-fc2f4811d43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Token">
+      <UniqueIdentifier>{64c027be-11c3-482d-a17c-5b84d3b4005f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Solver">
+      <UniqueIdentifier>{df377e61-6913-41ff-ab49-bcc552e960aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solver">
+      <UniqueIdentifier>{2841867b-49fd-4566-895f-900e0aebbaea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CppRpnSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LiteralToken.cpp">
+      <Filter>Source Files\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="RpnEvaluatorVisitor.cpp">
+      <Filter>Source Files\Solver</Filter>
+    </ClCompile>
+    <ClCompile Include="OperatorToken.cpp">
+      <Filter>Source Files\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidToken.cpp">
+      <Filter>Source Files\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="TokenVisitor.hpp">
+      <Filter>Header Files\Solver</Filter>
+    </ClCompile>
+    <ClCompile Include="TokenizerFsm.cpp">
+      <Filter>Source Files\Solver</Filter>
+    </ClCompile>
+    <ClCompile Include="InfixToRpnConverter.cpp">
+      <Filter>Source Files\Solver</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Token.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteralToken.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="Associativity.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="OperatorToken.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidToken.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenizerFsm.hpp">
+      <Filter>Header Files\Solver</Filter>
+    </ClInclude>
+    <ClInclude Include="RpnEvaluatorVisitor.hpp">
+      <Filter>Header Files\Solver</Filter>
+    </ClInclude>
+    <ClInclude Include="InfixToRpnConverter.hpp">
+      <Filter>Header Files\Solver</Filter>
+    </ClInclude>
+    <ClInclude Include="Operator.hpp">
+      <Filter>Header Files\Token</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
