@@ -2,6 +2,18 @@
 #include <string.h>
 #include "collections/stringbuilder.h"
 
+stringbuilder *make_stringbuilder(size_t initialcapacity)
+{
+    stringbuilder *strbuilder = malloc(sizeof(strbuilder));
+    if (initialcapacity < 0)
+    {
+        initialcapacity = 0;
+    }
+    strbuilder->buffer = malloc(sizeof(char) * initialcapacity);
+    strbuilder->capacity = initialcapacity;
+    strbuilder->count = 0;
+}
+
 void strbuilder_appendchar(stringbuilder *strbuilder, char toappend)
 {
     if (strbuilder == NULL)

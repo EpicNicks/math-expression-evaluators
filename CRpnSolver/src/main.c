@@ -4,6 +4,7 @@
 #include "collections/tokenlist.h"
 #include "solver/tokenizer.h"
 #include "solver/rpnconverter.h"
+#include "solver/rpnsolver.h"
 
 void solveandprintsteps(const char *input)
 {
@@ -29,6 +30,9 @@ void solveandprintsteps(const char *input)
     printf("rpn of tokens: %s\n", rpnstr);
     free(rpnstr);
 
+    double rpnsolveresult = rpnsolve(rpnlist, true);
+    printf("result: %f", rpnsolveresult);
+
     // cleanup
     free(tlist);
     free(rpnlist);
@@ -38,7 +42,7 @@ int main(int argc, const char *argv[])
 {
     if (argc == 1)
     {
-        const char examplestr[] = "22 + -31 ^ 42.5";
+        const char examplestr[] = "22 + -31 ^ 3";
         printf("Example solve on %s\n", examplestr);
         solveandprintsteps(examplestr);
     }

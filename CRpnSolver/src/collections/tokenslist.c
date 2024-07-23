@@ -46,6 +46,30 @@ int operatorprecedence(const char *op)
     return 0; // Unknown operator
 }
 
+int numoperands(token optoken)
+{
+    if (optoken.type != OPERATOR || optoken.strValue == NULL)
+        return 0;
+    if (
+        strcmp(optoken.strValue, "+") == 0 ||
+        strcmp(optoken.strValue, "-") == 0 ||
+        strcmp(optoken.strValue, "*") == 0 ||
+        strcmp(optoken.strValue, "x") == 0 ||
+        strcmp(optoken.strValue, "/") == 0 ||
+        strcmp(optoken.strValue, "^") == 0 ||
+        strcmp(optoken.strValue, "(") == 0 ||
+        strcmp(optoken.strValue, ")") == 0)
+    {
+        return 2;
+    }
+    else if (strcmp(optoken.strValue, "u+") == 0 ||
+             strcmp(optoken.strValue, "u-") == 0)
+    {
+        return 1;
+    }
+    return false;
+}
+
 associativity tokenassociativity(token t)
 {
     if (t.strValue == NULL)
@@ -86,6 +110,11 @@ bool precedencecompare(token t1, token t2)
     {
         return false;
     }
+}
+
+void freetoken(token t)
+{
+    free(t.strValue);
 }
 
 char *tokentostr(const token *t)

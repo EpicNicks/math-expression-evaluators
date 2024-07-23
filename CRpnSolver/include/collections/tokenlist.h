@@ -30,10 +30,12 @@ typedef struct token_list
 } token_list;
 
 bool isoptoken(token t);
+int numoperands(token optoken);
 int operatorprecedence(const char *op);
 associativity tokenassociativity(token t);
 bool precedencecompare(token t1, token t2);
 
+void freetoken(token t);
 char *tokentostr(const token *t);
 char *tokenlisttostr(const token_list *tlist, const char *delim);
 
