@@ -35,9 +35,21 @@ token_list *tokenize(const char *tokenstr)
                     .position = startindex,
                     .strValue = malloc(sizeof(char) * (endindex - startindex + 1)),
                     .type = LITERAL};
-                strncpy(literaltoken.strValue, tokenstr + startindex, endindex - startindex);
-                literaltoken.strValue[endindex - startindex] = '\0';
-                tlistadd(tlist, literaltoken);
+                errno_t err = strncpy_s(literaltoken.strValue,
+                                        endindex - startindex + 1,
+                                        tokenstr + startindex,
+                                        endindex - startindex);
+                if (err != 0)
+                {
+                    // Handle error
+                    free(literaltoken.strValue);
+                    // You might want to return an error code or throw an exception here
+                }
+                else
+                {
+                    literaltoken.strValue[endindex - startindex] = '\0';
+                    tlistadd(tlist, literaltoken);
+                }
             }
             else
             {
@@ -45,19 +57,45 @@ token_list *tokenize(const char *tokenstr)
                     .position = startindex,
                     .strValue = malloc(sizeof(char) * (endindex - startindex + 1)),
                     .type = INVALID};
-                strncpy(invalid.strValue, tokenstr + startindex, endindex - startindex);
-                invalid.strValue[endindex - startindex] = '\0';
-                tlistadd(tlist, invalid);
+                errno_t err = strncpy_s(invalid.strValue,
+                                        endindex - startindex + 1,
+                                        tokenstr + startindex,
+                                        endindex - startindex);
+                if (err != 0)
+                {
+                    // Handle error
+                    free(invalid.strValue);
+                    // You might want to return an error code or throw an exception here
+                }
+                else
+                {
+                    invalid.strValue[endindex - startindex] = '\0';
+                    tlistadd(tlist, invalid);
+                }
             }
         }
         else if (strchr("+-*/x()^", tokenstr[i]) != NULL)
         {
-            token operatortoken = {
-                .position = i,
-                .strValue = malloc(sizeof(char) * 2),
-                .type = OPERATOR};
-            operatortoken.strValue[0] = tokenstr[i];
-            operatortoken.strValue[1] = '\0';
+            token operatortoken;
+            if ((tokenstr[i] == '+' || tokenstr[i] == '-') && (tlist->count == 0 || (isoptoken(tlist->tokens[tlist->count - 1]) && tlist->tokens[tlist->count - 1].strValue[0] != ')')))
+            {
+                operatortoken = (token){
+                    .position = i,
+                    .strValue = malloc(sizeof(char) * 3),
+                    .type = OPERATOR};
+                operatortoken.strValue[0] = 'u';
+                operatortoken.strValue[1] = tokenstr[i];
+                operatortoken.strValue[2] = '\0';
+            }
+            else
+            {
+                operatortoken = (token){
+                    .position = i,
+                    .strValue = malloc(sizeof(char) * 2),
+                    .type = OPERATOR};
+                operatortoken.strValue[0] = tokenstr[i];
+                operatortoken.strValue[1] = '\0';
+            }
             tlistadd(tlist, operatortoken);
             i++;
         }

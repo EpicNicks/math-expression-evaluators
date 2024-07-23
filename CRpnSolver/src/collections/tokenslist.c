@@ -1,23 +1,118 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "collections/stringbuilder.h"
 #include "collections/tokenlist.h"
 
-char *tokentostr(token *t)
+bool isoptoken(token t)
+{
+    if (t.strValue == NULL)
+        return false;
+    if (
+        strcmp(t.strValue, "+") == 0 ||
+        strcmp(t.strValue, "-") == 0 ||
+        strcmp(t.strValue, "*") == 0 ||
+        strcmp(t.strValue, "x") == 0 ||
+        strcmp(t.strValue, "/") == 0 ||
+        strcmp(t.strValue, "^") == 0 ||
+        strcmp(t.strValue, "(") == 0 ||
+        strcmp(t.strValue, ")") == 0 ||
+        strcmp(t.strValue, "u+") == 0 ||
+        strcmp(t.strValue, "u-") == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+int operatorprecedence(const char *op)
+{
+    if (op == NULL)
+        return -1; // Invalid input
+
+    if (strcmp(op, "+") == 0 || strcmp(op, "-") == 0)
+        return 1;
+    if (strcmp(op, "*") == 0 || strcmp(op, "/") == 0 || strcmp(op, "x") == 0)
+        return 2;
+    if (strcmp(op, "^") == 0)
+        return 3;
+    if (strcmp(op, "u+") == 0 || strcmp(op, "u-") == 0)
+        return 4;
+    if (strcmp(op, "(") == 0 || strcmp(op, ")") == 0)
+        return 5;
+
+    return 0; // Unknown operator
+}
+
+associativity tokenassociativity(token t)
+{
+    if (t.strValue == NULL)
+        return NOT_ASSOCIATIVE;
+    if (
+        strcmp(t.strValue, "+") == 0 ||
+        strcmp(t.strValue, "-") == 0 ||
+        strcmp(t.strValue, "*") == 0 ||
+        strcmp(t.strValue, "x") == 0 ||
+        strcmp(t.strValue, "/") == 0 ||
+        strcmp(t.strValue, "u+") == 0 ||
+        strcmp(t.strValue, "u-") == 0)
+    {
+        return LEFT_ASSOCIATIVE;
+    }
+    else if (strcmp(t.strValue, "^") == 0)
+    {
+        return RIGHT_ASSOCIATIVE;
+    }
+    return NOT_ASSOCIATIVE;
+}
+
+bool precedencecompare(token t1, token t2)
+{
+    int p1 = operatorprecedence(t1.strValue);
+    int p2 = operatorprecedence(t2.strValue);
+    associativity a1 = tokenassociativity(t1);
+
+    if (a1 == LEFT_ASSOCIATIVE)
+    {
+        return p1 <= p2;
+    }
+    else if (a1 == RIGHT_ASSOCIATIVE)
+    {
+        return p1 < p2;
+    }
+    else // NOT_ASSOCIATIVE (parentheses)
+    {
+        return false;
+    }
+}
+
+char *tokentostr(const token *t)
 {
     if (t == NULL || t->strValue == NULL)
     {
         return NULL;
     }
-    int len = strlen(t->strValue);
-    char *ret = malloc(sizeof(char) * (3 + len));
 
-    ret[0] = t->type == INVALID ? '<' : '{';
-    strcpy(ret + 1, t->strValue);
-    ret[len + 1] = t->type == INVALID ? '>' : '}';
-    ret[len + 2] = '\0';
+    size_t len = strlen(t->strValue);
+    char *ret = malloc(sizeof(char) * (3 + len + 1));
+
+    if (ret == NULL)
+    {
+        return NULL;
+    }
+
+    char open_char = t->type == INVALID ? '<' : '{';
+    char close_char = t->type == INVALID ? '>' : '}';
+
+    int written = snprintf(ret, len + 3 + 1, "%c%s%c", open_char, t->strValue, close_char);
+
+    if (written < 0 || (size_t)written >= len + 3 + 1)
+    {
+        free(ret);
+        return NULL;
+    }
 
     return ret;
 }
@@ -78,7 +173,7 @@ char *tokenlisttostr(const token_list *tlist, const char *delim)
 
         for (int j = 0; token_str[j] != '\0'; j++)
         {
-            strbuilder_append(sb, (char *)&token_str[j]);
+            strbuilder_appendchar(sb, token_str[j]);
         }
         free(token_str);
 
@@ -86,12 +181,12 @@ char *tokenlisttostr(const token_list *tlist, const char *delim)
         {
             for (int j = 0; delim[j] != '\0'; j++)
             {
-                strbuilder_append(sb, (char *)&delim[j]);
+                strbuilder_appendchar(sb, delim[j]);
             }
         }
     }
 
-    strbuilder_append(sb, (char *)"\0"); // Null-terminate the string
+    strbuilder_appendchar(sb, '\0'); // Null-terminate the string
 
     char *result = tostr(sb);
     freestrbuilder(sb);
@@ -115,11 +210,26 @@ void tlistadd(token_list *tlist, token t)
 
 token tlistpop(token_list *tlist)
 {
-    if (tlist->count == 0)
+    if (tlist == NULL || tlist->count == 0 || tlist->tokens == NULL)
     {
         return (token){.type = INVALID, .strValue = NULL, .position = 0};
     }
-    return tlist->tokens[--tlist->count];
+
+    tlist->count--;
+    token popped = tlist->tokens[tlist->count];
+
+    tlist->tokens[tlist->count] = (token){.type = INVALID, .strValue = NULL, .position = 0};
+
+    return popped;
+}
+
+token tlisttop(token_list *tlist)
+{
+    if (tlist == NULL || tlist->count == 0)
+    {
+        return (token){.type = INVALID, .strValue = NULL, .position = 0};
+    }
+    return tlist->tokens[tlist->count - 1];
 }
 
 void tlistpush(token_list *tlist, token t)
@@ -129,5 +239,5 @@ void tlistpush(token_list *tlist, token t)
 
 bool tlistisempty(token_list *tlist)
 {
-    return tlist->count == 0;
+    return tlist == NULL || tlist->count == 0;
 }
