@@ -42,7 +42,7 @@ int main(int argc, const char *argv[])
 {
     if (argc == 1)
     {
-        const char examplestr[] = "22 + -31 ^ 3";
+        const char examplestr[] = "2 - --3 ^ 2";
         printf("Example solve on %s\n", examplestr);
         solveandprintsteps(examplestr);
     }

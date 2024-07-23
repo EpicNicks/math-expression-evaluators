@@ -79,13 +79,13 @@ associativity tokenassociativity(token t)
         strcmp(t.strValue, "-") == 0 ||
         strcmp(t.strValue, "*") == 0 ||
         strcmp(t.strValue, "x") == 0 ||
-        strcmp(t.strValue, "/") == 0 ||
-        strcmp(t.strValue, "u+") == 0 ||
-        strcmp(t.strValue, "u-") == 0)
+        strcmp(t.strValue, "/") == 0)
     {
         return LEFT_ASSOCIATIVE;
     }
-    else if (strcmp(t.strValue, "^") == 0)
+    else if (strcmp(t.strValue, "^") == 0 ||
+             strcmp(t.strValue, "u+") == 0 ||
+             strcmp(t.strValue, "u-") == 0)
     {
         return RIGHT_ASSOCIATIVE;
     }
@@ -96,13 +96,13 @@ bool precedencecompare(token t1, token t2)
 {
     int p1 = operatorprecedence(t1.strValue);
     int p2 = operatorprecedence(t2.strValue);
-    associativity a1 = tokenassociativity(t1);
+    associativity a2 = tokenassociativity(t2);
 
-    if (a1 == LEFT_ASSOCIATIVE)
+    if (a2 == LEFT_ASSOCIATIVE)
     {
         return p1 <= p2;
     }
-    else if (a1 == RIGHT_ASSOCIATIVE)
+    else if (a2 == RIGHT_ASSOCIATIVE)
     {
         return p1 < p2;
     }
