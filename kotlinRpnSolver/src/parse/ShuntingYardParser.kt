@@ -75,8 +75,8 @@ fun shuntingYardSolve(rpnSolveList: List<Token>): Pair<Double, List<String>> {
             is OperatorToken -> {
                 when (token.numOperands) {
                     2 -> {
-                        val lhs = solveStack.pop()
                         val rhs = solveStack.pop()
+                        val lhs = solveStack.pop()
                         if (lhs !is LiteralToken || rhs !is LiteralToken) {
                             throw IllegalArgumentException("Operator arguments were not both literals. lhs: ${lhs.toSimpleString()} rhs: ${rhs.toSimpleString()}.")
                         }

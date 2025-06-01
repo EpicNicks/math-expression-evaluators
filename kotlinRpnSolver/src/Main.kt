@@ -7,7 +7,7 @@ fun main(args: Array<String>) {
     when (args.size) {
         1 -> calculateExpressionAndPrintSteps(args[0]).also { println("result: $it") }
         0 -> {
-            val exampleExpression = "2 + -2 ^ 3 * 4 / 5"
+            val exampleExpression = "3 + 4 * 2 / (1 - 5)^2^1"
             println("Using example expression $exampleExpression")
             calculateExpressionAndPrintSteps(exampleExpression).also { println("result: $it") }
         }
